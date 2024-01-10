@@ -95,6 +95,7 @@ int Server::listenConnections() {
     auto lastPingTime = std::chrono::steady_clock::now();
 
     while (true) {
+        cout << "whileloop" << endl;
         // Check if 5 seconds have passed since the last ping
         auto now = std::chrono::steady_clock::now();
 
@@ -130,14 +131,9 @@ int Server::listenConnections() {
                 lastPingTime = now;
         }
 
-        timeval timeout = {5,0};
-
-
         tests = client_socks;
-
-
-        return_value = select(FD_SETSIZE, &tests, (fd_set *) NULL, (fd_set *) NULL, &timeout);
-
+        struct timeval timeout = {5,0};
+        return_value = select(FD_SETSIZE, &tests, (fd_set *) nullptr, (fd_set *) nullptr, &timeout);
 
         if (return_value < 0) {
             cout << "Select error\n" << endl;
@@ -150,6 +146,7 @@ int Server::listenConnections() {
 
             // je dany socket v sade fd ze kterych lze cist ?
             if (FD_ISSET(fd, &tests)) {
+                cout << "forloop" << endl;
 
                 // je to server socket ? prijmeme nove spojeni
                 if (fd == server_socket) {
